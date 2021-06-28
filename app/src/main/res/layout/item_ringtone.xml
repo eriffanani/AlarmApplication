@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.erif.alarmmanager.model.add_alarm.form.ringtone.ModelItemRingtone" />
+
+        <variable
+            name="viewModel"
+            type="com.erif.alarmmanager.view_model.add_alarm.form.VMActRingtoneChooser" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{() -> viewModel.onClickItem(item, position)}">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="@{position == 0 ? View.GONE : View.VISIBLE}"
+            android:background="#EEDDDDDD"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.title}"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_check_green"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:visibility="@{item.selected ? View.VISIBLE : View.GONE}"/>
+
+    </RelativeLayout>
+
+</layout>

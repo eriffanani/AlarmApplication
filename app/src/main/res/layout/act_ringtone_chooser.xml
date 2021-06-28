@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.add_alarm.form.ringtone_chooser.ActRingtoneChooser">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.erif.alarmmanager.model.add_alarm.form.ringtone.ModelActRingtoneChooser" />
+
+        <variable
+            name="viewModel"
+            type="com.erif.alarmmanager.view_model.add_alarm.form.VMActRingtoneChooser" />
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            style="@style/AppbarStyle">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/act_ringtone_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="Pilih Ringtone"
+                style="@style/ToolbarTheme"
+                app:navigationIcon="@drawable/ic_back_white"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="?attr/actionBarSize"
+            app:setRecyclerViewAdapter="@{viewModel.adapter}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_check_white"
+            android:tint="@null"
+            android:onClick="@{() -> viewModel.onClickFabDone()}"
+            android:visibility="@{model.selectedTitle != null ? View.VISIBLE : View.GONE}"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="12dp"
+            tools:ignore="ContentDescription" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

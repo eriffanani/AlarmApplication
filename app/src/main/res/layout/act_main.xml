@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.ActMain">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.erif.alarmmanager.model.ModelActMain" />
+
+        <variable
+            name="viewModel"
+            type="com.erif.alarmmanager.view_model.VMActMain" />
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            style="@style/AppbarStyle">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/act_main_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ToolbarTheme"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:title="@string/app_name"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:setRecyclerViewAdapter="@{viewModel.adapter}"
+            tools:listitem="@layout/item_alarm"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="@{model.problem ? View.VISIBLE : View.GONE}"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tidak ada alarm"
+                android:textSize="18sp"
+                android:textColor="@color/titleColor"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/subtitleColor"
+                android:text="Klik tombol tambah untuk membuat alarm"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="15dp"
+            style="@style/FabStyle"
+            android:onClick="@{() -> viewModel.onClickFabAdd()}"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="\@ Kurnia Effort Digital"
+            android:layout_gravity="bottom"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:gravity="center_horizontal"
+            android:background="@color/white"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
