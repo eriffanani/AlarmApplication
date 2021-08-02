@@ -26,12 +26,15 @@
         <activity
             android:name=".view.receiver.ActReceiver"
             android:launchMode="singleTop"
+            android:exported="true"
             android:theme="@style/Theme.AlarmReceiver"><!--android:theme="@style/Theme.Swipe.Back"-->
             <intent-filter>
                 <action android:name="android.intent.action.CALL" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ActMain">
+        <activity
+            android:name=".view.ActMain"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
