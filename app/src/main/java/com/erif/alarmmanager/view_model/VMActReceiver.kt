@@ -1,21 +1,18 @@
 package com.erif.alarmmanager.view_model
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.lifecycle.ViewModel
-import com.erif.alarmmanager.R
 import com.erif.alarmmanager.model.ModelItemAlarm
 import com.erif.alarmmanager.model.receiver.ModelActReceiver
 import com.erif.alarmmanager.utils.database.DatabaseAlarm
 import java.text.SimpleDateFormat
 import java.util.*
 
-@SuppressLint("StaticFieldLeak")
-class VMActReceiver(private val context: Context, private val model: ModelActReceiver): ViewModel() {
-
-    private var dbAlarm: DatabaseAlarm = DatabaseAlarm(context)
+class VMActReceiver constructor(
+    private val model: ModelActReceiver,
+    private val dbAlarm: DatabaseAlarm?,
+    private val animationUp: Animation
+): ViewModel() {
 
     init {
         loadAlarm()
@@ -28,7 +25,7 @@ class VMActReceiver(private val context: Context, private val model: ModelActRec
     }
 
     private fun loadAlarm() {
-        val list: MutableList<ModelItemAlarm> = dbAlarm.getAlarm()
+        val list: MutableList<ModelItemAlarm> = dbAlarm?.getAlarm() ?: ArrayList()
         list.forEach { item->
             val ringtoneUri = item.ringtoneUri
             ringtoneUri?.let {
@@ -40,8 +37,8 @@ class VMActReceiver(private val context: Context, private val model: ModelActRec
         }
     }
 
-    fun animationUp(): Animation{
-        return AnimationUtils.loadAnimation(context, R.anim.anim_slide_up)
+    fun animationUp(): Animation {
+        return animationUp
     }
 
 }

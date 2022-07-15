@@ -8,4 +8,5 @@
     <color name="titleColor">#000000</color>
     <color name="subtitleColor">#9A9A9A</color>
     <color name="colorPage">#FFFFFF</color>
+    <color name="colorLine">#E6E6E6</color>
 </resources>

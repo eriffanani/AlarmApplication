@@ -6,15 +6,19 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.Toast
+import com.erif.alarmmanager.R
 import com.erif.alarmmanager.utils.database.DatabaseAlarm
 import com.erif.alarmmanager.utils.services.AlarmBroadcastReceiver
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MyHelper(private val context: Context) {
+class MyHelper constructor(
+    private val context: Context
+) {
 
-    private val dbAlarm: DatabaseAlarm = DatabaseAlarm(context)
+    private val dbAlarm = DatabaseAlarm(context)
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private val format = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
 
     private fun toast(message: String){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -86,22 +90,34 @@ class MyHelper(private val context: Context) {
     fun triggerAlarm(id: Int, millis: Long, duration: Int, withMessage: Boolean) {
         val alarmIntent = Intent(context, AlarmBroadcastReceiver::class.java)
         alarmIntent.putExtra("id", id)
-        val pendingIntent = PendingIntent.getBroadcast(context, id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context, id, alarmIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, millis, pendingIntent)
         else
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, millis, pendingIntent)
         if (withMessage)
-            toast("Alarm diatur dalam $duration jam")
+            toast(getString(R.string.alarm_set_in)+" "+duration+" "+getString(R.string.hour).lowercase())
     }
 
     // Cancel Alarm
     fun cancelAlarm(id: Int, withMessage: Boolean) {
         val alarmIntent = Intent(context, AlarmBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context, id, alarmIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        )
         alarmManager.cancel(pendingIntent)
         if (withMessage)
-            toast("Alarm dibatalkan")
+            toast(getString(R.string.alarm_canceled))
     }
 
     // Get Hour To Millis
@@ -128,17 +144,13 @@ class MyHelper(private val context: Context) {
     }
 
     fun stringToDate(value: String): Date {
-        val format = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
-        val newDate: Date? = format.parse(value)
+        val newDate = format.parse(value)
         val calendar = Calendar.getInstance()
-        newDate?.let {
-            calendar.time = it
-        }
+        newDate?.let { calendar.time = it }
         return calendar.time
     }
 
-    fun dateToString(hour: Int, minutes: Int): String{
-        val format = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault())
+    fun dateToString(hour: Int, minutes: Int): String {
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.HOUR, hour)
         calendar.add(Calendar.MINUTE, minutes)
@@ -149,6 +161,10 @@ class MyHelper(private val context: Context) {
         val dateString = dateToString(hour, minutes)
         val date = stringToDate(dateString)
         return dateToMillis(date)
+    }
+
+    private fun getString(id: Int): String {
+        return context.resources.getString(id)
     }
 
 }

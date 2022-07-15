@@ -1,37 +1,23 @@
 package com.erif.alarmmanager.view_model.add_alarm
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Dialog
-import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.widget.CompoundButton
 import android.widget.NumberPicker
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.erif.alarmmanager.utils.callback.CallbackAlarmForm
-import com.erif.alarmmanager.utils.database.DatabaseAlarm
 import com.erif.alarmmanager.model.ModelItemAlarm
 import com.erif.alarmmanager.model.add_alarm.ModelFrgAddAlarm
 import com.erif.alarmmanager.utils.Constant
 import com.erif.alarmmanager.utils.MyHelper
-import com.erif.alarmmanager.view.add_alarm.form.ActAddDesc
-import com.erif.alarmmanager.view.add_alarm.form.ActAddTitle
-import com.erif.alarmmanager.view.add_alarm.form.ringtone_chooser.ActRingtoneChooser
+import com.erif.alarmmanager.utils.database.DatabaseAlarm
 import org.json.JSONArray
-import java.util.*
 
-@SuppressLint("StaticFieldLeak")
 class VMFrgAddAlarm constructor(
-    private val context: Context,
     private val model: ModelFrgAddAlarm,
-    private val dialog: Dialog,
-    private val callbackForm: CallbackAlarmForm
+    private val dbAlarm: DatabaseAlarm?,
+    private val helper: MyHelper?
 ): ViewModel() {
 
-    private var dbAlarm: DatabaseAlarm = DatabaseAlarm(context)
-    private var activity: Activity = context as Activity
-    private val helper = MyHelper(context)
+    private val liveClick = MutableLiveData<Any>()
 
     init {
         if (model.update)
@@ -39,54 +25,36 @@ class VMFrgAddAlarm constructor(
     }
 
     private fun loadAlarm(alarmId: Int) {
-        val itemAlarm = dbAlarm.getAlarm(alarmId)
-        model.alarmTitle = itemAlarm.title
-        model.alarmDesc = itemAlarm.desc
-        model.ringtoneTitle = itemAlarm.ringtoneTitle
-        model.ringtoneUri = itemAlarm.ringtoneUri
-        model.alarmDuration = itemAlarm.duration
-        model.vibrate = itemAlarm.vibrate
+        val itemAlarm = dbAlarm?.getAlarm(alarmId)
+        model.alarmTitle = itemAlarm?.title
+        model.alarmDesc = itemAlarm?.desc
+        model.ringtoneTitle = itemAlarm?.ringtoneTitle
+        model.ringtoneUri = itemAlarm?.ringtoneUri
+        model.alarmDuration = itemAlarm?.duration ?: 0
+        model.vibrate = itemAlarm?.vibrate ?: 0
     }
 
-    fun onClickClose(){
-        closeDialog()
+    fun onClickRingtone() {
+        liveClick.value = 1
     }
 
-    fun onClickRingtone(){
-        val intent = Intent(context, ActRingtoneChooser::class.java)
-        activity.startActivityForResult(intent, Constant.REQUEST_CODE_RINGTONE)
+    fun onClickTitle() {
+        liveClick.value = 2
     }
 
-    fun onClickTitle(){
-        val intent = Intent(activity, ActAddTitle::class.java)
-        intent.putExtra("alarmTitle", model.alarmTitle)
-        activity.startActivityForResult(intent, Constant.REQUEST_CODE_TITLE)
+    fun onClickDesc() {
+        liveClick.value = 3
     }
 
-    fun onClickDesc(){
-        val intent = Intent(context, ActAddDesc::class.java)
-        intent.putExtra("alarmDesc", model.alarmDesc)
-        activity.startActivityForResult(intent, Constant.REQUEST_CODE_DESC)
+    fun onClickVibrate() {
+        model.vibrate = if (model.vibrate == Constant.STATUS_ACTIVE) {
+                    Constant.STATUS_NON_ACTIVE
+        } else {
+            Constant.STATUS_ACTIVE
+        }
     }
 
-    fun onClickVibrate(){
-        model.vibrate =
-                when(model.vibrate){
-                    Constant.STATUS_ACTIVE ->{
-                        Constant.STATUS_NON_ACTIVE
-                    }
-                    else ->{
-                        Constant.STATUS_ACTIVE
-                    }
-                }
-    }
-
-    fun onClickSave(){
-        saveAlarm()
-        closeDialog()
-    }
-
-    private fun saveAlarm(){
+    fun onClickSave() {
         val item = ModelItemAlarm()
         item.title = model.alarmTitle
         item.desc = model.alarmDesc
@@ -101,37 +69,21 @@ class VMFrgAddAlarm constructor(
             var added = 0
             for (i in 0 until lastIndex){
                 added = i+1
-                val dateString = helper.dateToString(added, 0)
+                val dateString = helper?.dateToString(added, 0)
                 jsonArray.put(dateString)
             }
             var addMin = 0
             for (i in 0..3){
                 addMin+=15
-                val dateString = helper.dateToString(added, addMin)
+                val dateString = helper?.dateToString(added, addMin)
                 jsonArray.put(dateString)
             }
         }else{
-            val dateString = helper.dateToString(1, 0)
+            val dateString = helper?.dateToString(1, 0)
             jsonArray.put(dateString)
         }
-
         item.timeList = jsonArray.toString()
-        if (model.update) {
-            model.alarmId.let {
-                id->
-                val getIsDurationUpdated = helper.isDurationUpdated(id, model.alarmDuration)
-                dbAlarm.update(id, item)
-                callbackForm.onUpdate(id, getIsDurationUpdated, model.alarmDuration)
-            }
-        }else{
-            dbAlarm.insert(item)
-            val id: Int = dbAlarm.getLastID()
-            callbackForm.onInsert(id, model.alarmDuration)
-        }
-    }
-
-    private fun closeDialog(){
-        dialog.dismiss()
+        liveClick.value = item
     }
 
     fun switchListener(): CompoundButton.OnCheckedChangeListener{
@@ -144,6 +96,10 @@ class VMFrgAddAlarm constructor(
         return NumberPicker.OnValueChangeListener { _, _, newVal ->
             model.alarmDuration = newVal
         }
+    }
+
+    fun mutableClick(): MutableLiveData<Any> {
+        return liveClick
     }
 
 }

@@ -207,7 +207,7 @@ class DatabaseAlarm(context: Context) :
     // Update Active
     fun deleteAlarm(id: Int) {
         val db = this.writableDatabase
-        db.delete(TABLE_NAME, "$KEY_ID=$id", null)
+        db.execSQL("DELETE FROM $TABLE_NAME WHERE $KEY_ID='$id'")
         db.close()
     }
 

@@ -1,39 +1,107 @@
 package com.erif.alarmmanager.view
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
-import com.erif.alarmmanager.R
 import com.erif.alarmmanager.databinding.ActMainBinding
 import com.erif.alarmmanager.model.ModelActMain
+import com.erif.alarmmanager.model.ModelItemAlarm
 import com.erif.alarmmanager.utils.Constant
+import com.erif.alarmmanager.utils.MyHelper
+import com.erif.alarmmanager.utils.callback.CallbackAlarmForm
+import com.erif.alarmmanager.utils.callback.CallbackConfirmation
+import com.erif.alarmmanager.utils.database.DatabaseAlarm
+import com.erif.alarmmanager.view.add_alarm.FrgAddAlarmBottomSheet
+import com.erif.alarmmanager.view.add_alarm.form.FrgConfirmationBottomSheet
 import com.erif.alarmmanager.view_model.VMActMain
 
-class ActMain : AppCompatActivity() {
+class ActMain : AppCompatActivity(), CallbackAlarmForm, CallbackConfirmation {
 
     private var viewModel: VMActMain? = null
+    private var helper: MyHelper? = null
+
+    private var dialogAdd: FrgAddAlarmBottomSheet? = null
+    private var dialogDelete: FrgConfirmationBottomSheet? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupBinding()
-    }
 
-    private fun setupBinding(){
-        val binding: ActMainBinding = DataBindingUtil.setContentView(this, R.layout.act_main)
+        helper = MyHelper(this)
+        dialogDelete = FrgConfirmationBottomSheet(this)
+
+        val binding = ActMainBinding.inflate(layoutInflater)
+        val toolbar = binding.actMainToolbar
+
         val model = ModelActMain()
         binding.model = model
-        viewModel = VMActMain(this, model, supportFragmentManager)
-        binding.viewModel = viewModel
-        setSupportActionBar(binding.actMainToolbar)
 
+        viewModel = VMActMain(model, DatabaseAlarm(this), helper)
+        binding.viewModel = viewModel
+        setContentView(binding.root)
+        setSupportActionBar(toolbar)
+
+        toolbar.post {
+            requestPermission()
+            viewModel?.setupAlarmList()
+        }
+
+        viewModel?.mutableClick()?.observe(this) {
+            if (it is Int) {
+                if (it == 0) {
+                    showFormDialog()
+                } else if (it == 1) {
+                    showDeleteConfirmation()
+                }
+            } else if (it is ModelItemAlarm) {
+                showFormDialog(it.id)
+            }
+        }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    private fun showFormDialog(){
+        dialogAdd = FrgAddAlarmBottomSheet(this, resultLauncher)
+        showForm()
+    }
+
+    private fun showFormDialog(getAlarmId: Int){
+        dialogAdd = FrgAddAlarmBottomSheet(this, true, getAlarmId, resultLauncher)
+        showForm()
+    }
+
+    private fun showForm(){
+        dialogAdd?.show(supportFragmentManager, dialogAdd?.tag)
+    }
+
+    // Request Permission
+    private fun requestPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.ANSWER_PHONE_CALLS) !=
+                PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ANSWER_PHONE_CALLS)) {
+                    ActivityCompat.requestPermissions(
+                        this, arrayOf(Manifest.permission.ANSWER_PHONE_CALLS), 1)
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        ActivityCompat.requestPermissions(
+                            this, arrayOf(Manifest.permission.ANSWER_PHONE_CALLS), 1)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             1 -> {
@@ -43,7 +111,6 @@ class ActMain : AppCompatActivity() {
                                     Manifest.permission.ANSWER_PHONE_CALLS) ==
                                     PackageManager.PERMISSION_GRANTED)) {
                         Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-                        //AutoStartHelper.instance.getAutoStartPermission(this)
                     }
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
@@ -53,7 +120,7 @@ class ActMain : AppCompatActivity() {
         }
     }
 
-    /*private fun showNotif(){
+    /*private fun showNotification(){
         val mBuilder = NotificationCompat.Builder(this, "notify_001")
         val fullScreenIntent = Intent(this, ActivityReceiver::class.java)
         val fullScreenPendingIntent = PendingIntent.getActivity(
@@ -91,7 +158,93 @@ class ActMain : AppCompatActivity() {
         mNotificationManager.notify(0, mBuilder.build())
     }*/
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    private val resultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        val requestCode = it.resultCode
+        val data = it.data
+        when (requestCode) {
+            Constant.REQUEST_CODE_RINGTONE -> {
+                data?.let { mData->
+                    var ringtoneName: String? = null
+                    var ringtoneUri: String? = null
+                    if (mData.hasExtra("ringtoneName"))
+                        ringtoneName = mData.getStringExtra("ringtoneName")
+                    if (mData.hasExtra("ringtoneUri"))
+                        ringtoneUri = mData.getStringExtra("ringtoneUri")
+                    ringtoneName?.let { mRingtoneName->
+                        ringtoneUri?.let { mRingToneUri->
+                            dialogAdd?.updateRingtone(mRingtoneName, mRingToneUri)
+                        }
+                    }
+                }
+            }
+            Constant.REQUEST_CODE_TITLE -> {
+                data?.let { mData->
+                    if (mData.hasExtra("alarmTitle")){
+                        val alarmTitle = mData.getStringExtra("alarmTitle")
+                        alarmTitle?.let { mDesc->
+                            dialogAdd?.updateTitle(mDesc)
+                        }
+                    }
+                }
+            }
+            Constant.REQUEST_CODE_DESC -> {
+                data?.let { mData->
+                    if (mData.hasExtra("alarmDesc")){
+                        val alarmDesc = mData.getStringExtra("alarmDesc")
+                        alarmDesc?.let { mDesc->
+                            dialogAdd?.updateDesc(mDesc)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Show Delete Confirmation
+    private fun showDeleteConfirmation(){
+        dialogDelete?.show(supportFragmentManager, dialogDelete?.tag)
+    }
+
+    // Database On Insert New Alarm
+    override fun onInsert(id: Int, duration: Int) {
+        viewModel?.refreshList()
+        val millis = helper?.getMillis(0, 1) ?: 0
+        helper?.triggerAlarm(id, millis, duration, true)
+    }
+
+    // Database On Update Alarm
+    override fun onUpdate(id: Int, isUpdateTime: Boolean, duration: Int) {
+        viewModel?.refreshList()
+        if (isUpdateTime){
+            if (helper?.isAlarmActive(id) == true){
+                helper?.cancelAlarm(id, false)
+                val millis = helper?.getMillis(1, 0) ?: 0
+                helper?.triggerAlarm(id, millis, duration, true)
+                helper?.updateIndex(id, 0)
+            }
+        }
+    }
+
+    // On Click Confirmation Cancel
+    override fun onConfirmationCancel() {
+
+    }
+
+    // On Click Confirmation Yes
+    override fun onConfirmationYes() {
+        helper?.deleteAlarmFromDatabase(viewModel?.currentID ?: 0)
+        Log.d("ActMain", "Id: ${viewModel?.currentID ?: -1}")
+        viewModel?.getAdapter()?.deleteItem(viewModel?.currentPosition ?: -1)
+        if ((viewModel?.list?.size ?: 0) < 1)
+            viewModel?.showEmpty()
+        viewModel?.currentID = -1
+        viewModel?.currentPosition = -1
+        helper?.cancelAlarm(viewModel?.currentID ?: -1, false)
+    }
+
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             Constant.REQUEST_CODE_RINGTONE -> {
@@ -136,6 +289,6 @@ class ActMain : AppCompatActivity() {
                 }
             }
         }
-    }
+    }*/
 
 }

@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/bg_swipe.xml" value="0.1675" />
+        <entry key="app/src/main/res/layout/act_add_desc.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/act_add_title.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/act_main.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/layout/act_receiver.xml" value="0.2824074074074074" />
+        <entry key="app/src/main/res/layout/act_ringtone_chooser.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/frg_add_alarm_bottom_sheet.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/frg_confirmation_bottom_sheet.xml" value="0.24074074074074073" />
+        <entry key="app/src/main/res/layout/item_alarm.xml" value="0.26944444444444443" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

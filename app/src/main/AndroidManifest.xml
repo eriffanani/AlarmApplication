@@ -5,6 +5,7 @@
     package="com.erif.alarmmanager">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
@@ -20,8 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AlarmManager"
         tools:ignore="AllowBackup">
-        <activity android:name=".view.add_alarm.form.ActAddDesc"/>
-        <activity android:name=".view.add_alarm.form.ActAddTitle" />
+        <activity
+            android:name=".view.add_alarm.form.ActAddDesc"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".view.add_alarm.form.ActAddTitle"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".view.add_alarm.form.ringtone_chooser.ActRingtoneChooser" />
         <activity
             android:name=".view.receiver.ActReceiver"

@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="20dp"
+        android:paddingBottom="@dimen/margin_safe_area"
         android:background="@color/colorPage">
 
         <RelativeLayout
@@ -27,18 +27,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Konfirmasi"
+                android:text="@string/confirmation"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:textSize="16sp"
+                android:layout_marginStart="@dimen/margin_safe_area"
+                android:textSize="@dimen/text_size_large"
                 android:textColor="@color/black"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:ignore="RelativeOverlap" />
 
             <RelativeLayout
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="@dimen/margin_normal"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{() -> viewModel.onClickClose()}">
 
@@ -46,7 +47,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_close_black"/>
+                    android:src="@drawable/ic_close_black"
+                    tools:ignore="ContentDescription" />
 
             </RelativeLayout>
 
@@ -54,15 +56,14 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e2e2e2"/>
-
+            android:layout_height="1.2dp"
+            android:background="#E6E6E6"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Apakah yakin ingin menghapus alarm ini?"
-            android:paddingStart="10dp"
+            android:text="@string/confirmation_message"
+            android:paddingStart="15dp"
             android:paddingEnd="10dp"
             android:textColor="@color/titleColor"
             android:layout_marginTop="15dp"
@@ -72,28 +73,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp">
+            android:layout_marginTop="@dimen/description_input_margin_top"
+            android:paddingStart="@dimen/margin_safe_area"
+            android:paddingEnd="@dimen/margin_safe_area">
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="@{() -> viewModel.onClickCancel()}"
-                android:text="Batal"/>
+                android:text="@string/cancel"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_weight="1.5"/>
+                android:layout_weight="1.4"/>
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:backgroundTint="@color/subtitleColor"
                 android:onClick="@{() -> viewModel.onClickYes()}"
-                android:text="Ya"/>
+                android:text="@string/delete"/>
 
         </LinearLayout>
 

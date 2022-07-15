@@ -121,7 +121,7 @@
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
                 android:background="?attr/selectableItemBackground"
-                android:onClick="@{() -> viewModel.onClickItemDelete(item.id, position)}">
+                android:onClick="@{() -> viewModel.onClickItemDelete(item)}">
 
                 <ImageView
                     android:layout_width="wrap_content"

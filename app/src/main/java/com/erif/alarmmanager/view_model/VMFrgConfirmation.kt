@@ -1,29 +1,26 @@
 package com.erif.alarmmanager.view_model
 
-import android.app.Dialog
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.erif.alarmmanager.utils.callback.CallbackConfirmation
 
-class VMFrgConfirmation(
-        private val dialog: Dialog,
-        private val callback: CallbackConfirmation) : ViewModel() {
+class VMFrgConfirmation: ViewModel() {
 
-    fun onClickClose(){
-        closeDialog()
+    private val liveClick = MutableLiveData<Int>()
+
+    fun onClickClose() {
+        liveClick.value = 0
     }
 
-    fun onClickCancel(){
-        closeDialog()
-        callback.onConfirmationCancel()
+    fun onClickCancel() {
+        liveClick.value = 1
     }
 
-    fun onClickYes(){
-        closeDialog()
-        callback.onConfirmationYes()
+    fun onClickYes() {
+        liveClick.value = 2
     }
 
-    private fun closeDialog(){
-        dialog.dismiss()
+    fun mutableClick(): MutableLiveData<Int> {
+        return liveClick
     }
 
 }

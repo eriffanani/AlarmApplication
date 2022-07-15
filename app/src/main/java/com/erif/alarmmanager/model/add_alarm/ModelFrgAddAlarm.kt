@@ -24,7 +24,7 @@ class ModelFrgAddAlarm: BaseObservable() {
 
     // Alarm Title
     @get: Bindable
-    var alarmTitle: String? = "Alarm 1"
+    var alarmTitle: String? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.alarmTitle)
@@ -32,7 +32,7 @@ class ModelFrgAddAlarm: BaseObservable() {
 
     // Alarm Desc
     @get: Bindable
-    var alarmDesc: String? = "Deskripsi Alarm 1"
+    var alarmDesc: String? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.alarmDesc)
@@ -40,7 +40,7 @@ class ModelFrgAddAlarm: BaseObservable() {
 
     // Ringtone Title
     @get: Bindable
-    var ringtoneTitle: String? = "None"
+    var ringtoneTitle: String? = null
         set(value) {
             field = value
             notifyPropertyChanged(BR.ringtoneTitle)

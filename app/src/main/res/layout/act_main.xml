@@ -55,8 +55,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tidak ada alarm"
-                android:textSize="18sp"
+                android:text="@string/alarm_not_found"
+                android:textSize="@dimen/text_size_large"
                 android:textColor="@color/titleColor"
                 android:textStyle="bold"/>
 
@@ -64,8 +64,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/subtitleColor"
-                android:text="Klik tombol tambah untuk membuat alarm"
-                android:textSize="14sp"/>
+                android:layout_marginTop="@dimen/margin_xSmall"
+                android:text="@string/click_to_add_alarm"
+                android:textSize="@dimen/text_size"/>
 
         </LinearLayout>
 
@@ -75,22 +76,10 @@
             android:src="@drawable/ic_add"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             android:layout_gravity="end|bottom"
-            android:layout_margin="15dp"
+            android:layout_margin="@dimen/margin_safe_area"
             style="@style/FabStyle"
             android:onClick="@{() -> viewModel.onClickFabAdd()}"
             tools:ignore="ContentDescription" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="\@ Kurnia Effort Digital"
-            android:layout_gravity="bottom"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:gravity="center_horizontal"
-            android:background="@color/white"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -1,40 +1,47 @@
 package com.erif.alarmmanager.view.add_alarm.form
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.databinding.DataBindingUtil
-import com.erif.alarmmanager.R
+import androidx.appcompat.app.AppCompatActivity
 import com.erif.alarmmanager.databinding.ActAddTitleBinding
 import com.erif.alarmmanager.model.add_alarm.form.ModelActAddTitle
+import com.erif.alarmmanager.utils.Constant
 import com.erif.alarmmanager.view_model.add_alarm.form.VMActAddTitle
 
 class ActAddTitle : AppCompatActivity() {
 
-    private lateinit var model: ModelActAddTitle
-    private lateinit var viewModel: VMActAddTitle
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupBinding()
-    }
-
-    private fun setupBinding() {
-        val binding: ActAddTitleBinding = DataBindingUtil.setContentView(this, R.layout.act_add_title)
-        model = ModelActAddTitle()
+        val binding = ActAddTitleBinding.inflate(layoutInflater)
+        val model = ModelActAddTitle()
         val bundle = intent.extras
         bundle?.let {
-            if (bundle.containsKey("alarmTitle")){
-                val alarmTitle = bundle.getString("alarmTitle")
-                alarmTitle?.let {
-                    model.title = it
+            if (it.containsKey("alarmTitle")){
+                val alarmTitle = it.getString("alarmTitle")
+                alarmTitle?.let { title ->
+                    model.title = title
                 }
             }
         }
         binding.model = model
-        viewModel = VMActAddTitle(this, model)
+        val viewModel = VMActAddTitle()
         binding.viewModel = viewModel
+        setContentView(binding.root)
         setSupportActionBar(binding.actAddTitleToolbar)
+
+        viewModel.mutableClick().observe(this) {
+            if (it == 1) {
+                setActivityResult(model)
+            }
+        }
+    }
+
+    private fun setActivityResult(model: ModelActAddTitle) {
+        val intent = Intent()
+        intent.putExtra("alarmTitle", model.title)
+        setResult(Constant.REQUEST_CODE_TITLE, intent)
+        finish()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

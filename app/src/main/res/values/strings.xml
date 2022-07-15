@@ -3,6 +3,33 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="hour">Jam</string>
+    <string name="none">None</string>
+    <string name="alarm_title">Alarm 1</string>
+    <string name="alarm_desc">Alarm Description 1</string>
+    <string name="alarm_not_found">Alarm Not Found</string>
+    <string name="click_to_add_alarm">Click add button to create alarm</string>
+    <string name="hour">Hour</string>
+    <string name="select_ringtone">Select Ringtone</string>
+    <string name="description">Description</string>
+    <string name="description_write">Write alarm description</string>
+    <string name="save">Save</string>
+    <string name="save_title">Save Title</string>
+    <string name="save_description">Save Description</string>
+    <string name="title">Alarm Title</string>
+    <string name="title_write">Write alarm title</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="confirmation_message">You want to delete this alarm right now, are you sure?</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="configure_alarm">Configure Alarm</string>
+    <string name="ringtone">Ringtone</string>
+    <string name="title_form">Title</string>
+    <string name="description_form">Desc</string>
+    <string name="vibrate_while_playing">Vibrate while playing</string>
+    <string name="duration">Duration</string>
+    <string name="done">Done</string>
+    <string name="swipe_up_to_close">Swipe up to close</string>
+    <string name="alarm_set_in">Alarm set in </string>
+    <string name="alarm_canceled">Alarm is canceled</string>
 
 </resources>

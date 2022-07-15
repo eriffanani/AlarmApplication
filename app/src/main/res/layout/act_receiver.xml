@@ -42,7 +42,8 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_centerInParent="true" />
+                    android:layout_centerInParent="true"
+                    tools:ignore="ContentDescription" />
 
             </com.skyfishjy.library.RippleBackground>
 
@@ -51,8 +52,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="@dimen/margin_normal"
+                android:paddingEnd="@dimen/margin_normal"
                 android:paddingTop="40dp"
                 android:gravity="center">
 
@@ -72,7 +73,7 @@
                     android:text="@{model.alarmDesc}"
                     android:textSize="22sp"
                     android:textColor="@color/white"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="@dimen/margin_normal"/>
 
             </LinearLayout>
 
@@ -83,13 +84,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:layout_centerInParent="true">
+                android:layout_centerInParent="true"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_alarm_on_black"
-                    android:layout_marginTop="30dp" />
+                    android:layout_marginTop="@dimen/description_input_margin_top"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,7 +100,7 @@
                     android:text="@{model.currentTime}"
                     android:gravity="center"
                     android:textSize="45sp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/margin_xSmall"
                     android:textColor="@color/white"/>
 
             </LinearLayout>
@@ -105,7 +108,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Selesai"
+                android:text="@string/done"
                 android:visibility="gone"
                 android:layout_below="@id/timeLayout"
                 android:layout_centerHorizontal="true"
@@ -119,21 +122,23 @@
                 android:gravity="center_horizontal"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="@dimen/margin_normal"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="@dimen/margin_safe_area"
                     app:setAnimation="@{viewModel.animationUp()}"
-                    android:src="@drawable/ic_arrow_up_black"/>
+                    android:src="@drawable/ic_arrow_up_black"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Geser untuk menutup"
+                    android:text="@string/swipe_up_to_close"
                     android:textColor="@color/white"
-                    android:textSize="18sp"/>
+                    android:textSize="@dimen/text_size"/>
 
             </LinearLayout>
 

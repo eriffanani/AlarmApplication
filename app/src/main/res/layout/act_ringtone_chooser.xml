@@ -31,7 +31,7 @@
                 android:id="@+id/act_ringtone_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="Pilih Ringtone"
+                app:title="@string/select_ringtone"
                 style="@style/ToolbarTheme"
                 app:navigationIcon="@drawable/ic_back_white"/>
 
@@ -41,6 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            tools:itemCount="15"
+            tools:listitem="@layout/item_ringtone"
             android:paddingBottom="?attr/actionBarSize"
             app:setRecyclerViewAdapter="@{viewModel.adapter}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
@@ -53,7 +55,7 @@
             android:onClick="@{() -> viewModel.onClickFabDone()}"
             android:visibility="@{model.selectedTitle != null ? View.VISIBLE : View.GONE}"
             android:layout_gravity="end|bottom"
-            android:layout_margin="12dp"
+            android:layout_margin="@dimen/margin_safe_area"
             tools:ignore="ContentDescription" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

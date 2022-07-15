@@ -29,64 +29,46 @@
                 android:id="@+id/act_add_title_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="Tambahlan Judul"
+                app:title="@string/title"
                 style="@style/ToolbarTheme"
-                app:navigationIcon="@drawable/ic_back_white"/>
+                app:navigationIcon="@drawable/ic_close"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <ScrollView
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/description_input_height"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_marginTop="@dimen/description_input_margin_top"
+            android:padding="@dimen/margin_normal"
+            android:layout_marginStart="@dimen/margin_safe_area"
+            android:layout_marginEnd="@dimen/margin_safe_area"
+            android:background="@drawable/bg_form">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:inputType="textMultiLine|textCapWords"
+                android:gravity="start|top"
+                android:textSize="@dimen/text_size"
+                android:text="@{model.title}"
+                app:addTextChangedListener="@{model.titleListener()}"
+                android:textColor="@color/black"
+                android:hint="@string/title_write"
+                tools:ignore="Autofill" />
+
+        </RelativeLayout>
+
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:clipToPadding="false"
-            android:paddingTop="20dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tambahkan Judul"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:background="@drawable/bg_form">
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:inputType="textMultiLine|textCapWords"
-                        android:gravity="start|top"
-                        android:textSize="16sp"
-                        android:text="@{model.title}"
-                        app:addTextChangedListener="@{model.titleListener()}"
-                        android:textColor="@color/black"
-                        android:hint="Judul" />
-
-                </RelativeLayout>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Simpan"
-                    android:onClick="@{() -> viewModel.onClickSave()}"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="10dp"/>
-            </LinearLayout>
-
-        </ScrollView>
+            android:text="@string/save_title"
+            android:onClick="@{() -> viewModel.onClickSave()}"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="@dimen/margin_safe_area"
+            android:layout_marginEnd="@dimen/margin_safe_area"
+            android:layout_marginBottom="@dimen/margin_xSmall"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
